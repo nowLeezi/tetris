@@ -131,6 +131,38 @@
         .restart-btn:hover {
             transform: scale(1.05);
         }
+
+        .mobile-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            user-select: none;
+        }
+        .ctrl-btn {
+            width: 48px;
+            height: 48px;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 50%;
+            background: rgba(135, 206, 235, 0.7);
+            color: #222;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            margin: 0 2px;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .ctrl-btn:active {
+            background: rgba(135, 206, 235, 1);
+            transform: scale(0.95);
+        }
+        @media (min-width: 700px) {
+            .mobile-controls { display: none; }
+        }
+        @media (max-width: 699px) {
+            .game-container { padding-bottom: 80px; }
+        }
     </style>
 </head>
 <body>
@@ -156,6 +188,15 @@
             <p>← → : 이동 | ↑ : 회전 | ↓ : 빠른 낙하 | Space : 즉시 낙하</p>
             <p style="font-size: 0.8em; margin-top: 5px;">💎 두 줄 이상 제거 시 기존 블록 중 하나가 아이템으로 변합니다!</p>
             <p style="font-size: 0.7em; margin-top: 3px;">⬇️ 세로 폭발 | ➡️ 가로 폭발 | 🔄 블록 섞기</p>
+        </div>
+
+        <!-- 모바일 터치 컨트롤러 -->
+        <div class="mobile-controls">
+            <button class="ctrl-btn" id="btn-left">←</button>
+            <button class="ctrl-btn" id="btn-rotate">⟳</button>
+            <button class="ctrl-btn" id="btn-right">→</button>
+            <button class="ctrl-btn" id="btn-down">↓</button>
+            <button class="ctrl-btn" id="btn-drop">⏬</button>
         </div>
     </div>
 
@@ -654,6 +695,17 @@
                 }
             }
         }
+        
+        // 모바일 터치 버튼 이벤트
+        function triggerKey(key) {
+            const event = new KeyboardEvent('keydown', { key });
+            document.dispatchEvent(event);
+        }
+        document.getElementById('btn-left').addEventListener('touchstart', function(e) { e.preventDefault(); triggerKey('ArrowLeft'); });
+        document.getElementById('btn-right').addEventListener('touchstart', function(e) { e.preventDefault(); triggerKey('ArrowRight'); });
+        document.getElementById('btn-down').addEventListener('touchstart', function(e) { e.preventDefault(); triggerKey('ArrowDown'); });
+        document.getElementById('btn-rotate').addEventListener('touchstart', function(e) { e.preventDefault(); triggerKey('ArrowUp'); });
+        document.getElementById('btn-drop').addEventListener('touchstart', function(e) { e.preventDefault(); triggerKey(' '); });
         
         // 게임 시작
         initBoard();
